@@ -6,7 +6,7 @@ namespace TodoApi.Models;
 public class RefreshToken
 {
   [Key]
-  public required int Id { get; set; }
+  public int Id { get; set; }
   public string? Token { get; set; }
   public DateTime ExpiryDate { get; set; }
   public int UserId { get; set; }
