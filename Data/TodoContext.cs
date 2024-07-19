@@ -13,8 +13,12 @@ public class TodoContext : DbContext
     {
         modelBuilder.Entity<User>()
             .ToTable("User")
-            .HasIndex(e => e.Email)
-            .HasDatabaseName("IX_User_Email");
+            .HasIndex(u => u.Email)
+            .IsUnique();
         modelBuilder.Entity<Todo>().ToTable("Todo");
+        modelBuilder.Entity<RefreshToken>()
+            .ToTable("RefreshToken")
+            .HasIndex(u => u.UserId)
+            .IsUnique();
     }
 }
