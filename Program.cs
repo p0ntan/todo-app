@@ -5,13 +5,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TodoContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("TodoContext")));
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -38,6 +37,7 @@ static void CreateDbIfNotExists(IHost host)
 
 CreateDbIfNotExists(app);
 
+app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
