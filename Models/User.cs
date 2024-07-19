@@ -5,7 +5,7 @@ namespace TodoApi.Models;
 public class User
 {
   [Key]
-  public required int UserId { get; set; }
+  public required int Id { get; set; }
   [Required(ErrorMessage = "A first name is required")]
   public required string FirstName { get; set; }
   public required string LastName { get; set; }
