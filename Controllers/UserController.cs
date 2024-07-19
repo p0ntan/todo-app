@@ -3,18 +3,16 @@ using TodoApi.Models;
 using TodoApi.Data;
 using Microsoft.EntityFrameworkCore;
 namespace TodoApi.Controllers;
-using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
-[Authorize]
 [Route("[controller]s")]
-public class TodoController : ControllerBase
+public class UserController : ControllerBase
 {
-    private readonly ILogger<TodoController> _logger;
+    private readonly ILogger<UserController> _logger;
     private readonly TodoContext _context;
 
-    public TodoController(
-        ILogger<TodoController> logger,
+    public UserController(
+        ILogger<UserController> logger,
         TodoContext todoContext
     )
     {
@@ -34,24 +32,20 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Todo>> GetAll([FromQuery(Name = "date")] string? dateFilter)
+    public ActionResult<List<Todo>> GetAll([FromQuery(Name = "date")] string? date)
     {
-        var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
-        var todos = _context.Todos.Where(todo => todo.UserId == userId);
-
-        if (dateFilter != null)
+        List<Todo> todos;
+        
+        if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime dateTime))
         {
-            if (DateTime.TryParse(dateFilter, out var date))
-            {
-                todos = todos.Where(todo => todo.Date.Date == date.Date);
-            }
-            else
-            {
-                return BadRequest("Invalid date filter. Please provide a valid date.");
-            }
+            todos = [.. _context.Todos.Where(t => t.Date.Date == dateTime.Date)];
+        }
+        else
+        {
+            todos = [.. _context.Todos];
         }
 
-        return todos.ToList();
+        return todos;
     }
 
     [HttpPost]
@@ -62,15 +56,13 @@ public class TodoController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
-
         Todo todo = new()
         {
             Title = todoDto.Title,
             Description = todoDto.Description,
             Finished = todoDto.Finished,
             Date = todoDto.Date?.Date ?? DateTime.Now,
-            UserId = userId
+            UserId = 1  // TODO add userid from JWT
         };
 
         _context.Todos.Add(todo);
