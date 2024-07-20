@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
     }
 
     [Authorize(Policy = "RefreshToken")]
-    [HttpGet("refresh-token")]
+    [HttpPost("refresh-token")]
     public ActionResult<string> RefreshToken()
     {
         int userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
