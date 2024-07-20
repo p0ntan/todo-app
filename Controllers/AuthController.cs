@@ -1,10 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using TodoApi.Data;
 using TodoApi.Models;
-using System.Text;
-using System.Security.Claims;
 
 namespace TodoApi.Controllers;
 
@@ -30,29 +27,6 @@ public class AuthController : ControllerBase
         _httpClientFactory = httpClientFactory;
     }
 
-    // [HttpPost()]
-    // public ActionResult Get()
-    // {
-    //     var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:AccessTokenSecret"]!));
-    //     var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-    //     IEnumerable<Claim> claims =
-    //     [
-    //         new ("Name", "TodoApi"),
-    //         new ("Email", "test@test.test"),
-    //         new ("admin", "true", ClaimValueTypes.Boolean),
-    //     ];
-
-    //     var Sectoken = new JwtSecurityToken(_config["JWT:Issuer"],
-    //         _config["JWT:Issuer"],
-    //         claims,
-    //         expires: DateTime.Now.AddSeconds(20),
-    //         signingCredentials: credentials);
-
-    //     var token =  new JwtSecurityTokenHandler().WriteToken(Sectoken);
-
-    //     return Ok(token);
-    // }
-
     [HttpPost()]
     public async Task<ActionResult<string>> RequestGoogle()
     {
@@ -65,25 +39,8 @@ public class AuthController : ControllerBase
 
         string googleAccessToken = bearerToken.ToString().Substring("Bearer ".Length).Trim();
 
-        GoogleUserInfo googleInfo = await AuthModel.RequestGoogle(_httpClientFactory, googleAccessToken);
-        User user;
-
-        if (!_context.Users.Any(u => u.Email == googleInfo.Email))
-        {
-            user = new User()
-            {
-                Email = googleInfo.Email,
-                FirstName = googleInfo.GivenName,
-                LastName = googleInfo.FamilyName
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-        }
-        else
-        {
-            user = _context.Users.Where(u => u.Email == googleInfo.Email).First();
-        }
-
+        GoogleUserInfo googleInfo = await AuthModel.ValidateGoogleAccessToken(_httpClientFactory, googleAccessToken);
+        User user = await AuthModel.LoginOrCreateUser(_context, googleInfo);
         var accessToken = AuthModel.GenerateAccessToken(_config, user);
         var refreshToken = AuthModel.GenerateRefreshToken(_config, user, out var expires);
 
@@ -98,7 +55,22 @@ public class AuthController : ControllerBase
         // });
         // await _context.SaveChangesAsync();
 
-
         return Ok(new {accessToken, refreshToken });
+    }
+
+    [Authorize(Policy = "RefreshToken")]
+    [HttpGet("refresh-token")]
+    public ActionResult<string> RefreshToken()
+    {
+        int userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+        var user = _context.Users.Find(userId);
+
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var tokens = AuthModel.RefreshAccessToken(_config, user);
+        return Ok(tokens);
     }
 }

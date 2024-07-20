@@ -6,7 +6,7 @@ namespace TodoApi.Controllers;
 using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
-[Authorize]
+[Authorize(Policy = "AccessToken")]
 [Route("[controller]s")]
 public class TodoController : ControllerBase
 {
