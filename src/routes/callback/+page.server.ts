@@ -4,7 +4,12 @@ import { PRIVATE_GOOGLE_CLIENT_ID, PRIVATE_GOOGLE_CLIENT_SECRET } from '$env/sta
 import { PUBLIC_REST_API_URL } from '$env/static/public';
 import { OAuth2Client } from 'google-auth-library';
 
-export const load: PageServerLoad = async ({ url, cookies }) => {
+export const load: PageServerLoad = async ({ url, cookies, locals }) => {
+	if (locals.user)
+	{
+		throw redirect(302, "/home");
+	}
+
 	const authCode = url.searchParams.get('code');
 
     const client = new OAuth2Client(
@@ -49,11 +54,9 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		throw redirect(304, '/');
     }
 
-    console.log(parsedResponse);
-
     cookies.set('access_token', parsedResponse.accessToken, {
 		path: '/',
-		sameSite: 'strict',
+		sameSite: 'lax',
         httpOnly: true,
 		secure: false, // TODO change this aswell
 		maxAge: 60 * 15
@@ -61,7 +64,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
     cookies.set('refresh_token', parsedResponse.refreshToken, {
 		path: '/',
-		sameSite: 'strict',
+		sameSite: 'lax',
         httpOnly: true,
 		secure: false, // TODO change this aswell
 		maxAge: 60 * 60 * 24 * 7
