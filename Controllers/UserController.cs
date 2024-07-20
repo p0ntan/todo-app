@@ -31,46 +31,6 @@ public class UserController : ControllerBase
         return todo;
     }
 
-    [HttpGet]
-    public ActionResult<List<Todo>> GetAll([FromQuery(Name = "date")] string? date)
-    {
-        List<Todo> todos;
-        
-        if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime dateTime))
-        {
-            todos = [.. _context.Todos.Where(t => t.Date.Date == dateTime.Date)];
-        }
-        else
-        {
-            todos = [.. _context.Todos];
-        }
-
-        return todos;
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<Todo>> Create(TodoCreateDto todoDto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        Todo todo = new()
-        {
-            Title = todoDto.Title,
-            Description = todoDto.Description,
-            Finished = todoDto.Finished,
-            Date = todoDto.Date?.Date ?? DateTime.Now,
-            UserId = 1  // TODO add userid from JWT
-        };
-
-        _context.Todos.Add(todo);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(Get), new { id = todo.Id }, todo);
-    }
-
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Todo todo)  // TODO use DTO so that user-id can't be changed, or set it with id from jwt.
     {
