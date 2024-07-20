@@ -27,7 +27,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("AccessToken", policy =>
+        policy.RequireClaim("TokenType", "AccessToken"));
+    
+    options.AddPolicy("RefreshToken", policy =>
+        policy.RequireClaim("TokenType", "RefreshToken"));
+});
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
