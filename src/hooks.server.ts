@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export async function handle({ event, resolve }) {
     const token: string | undefined = event.cookies.get('access_token');
-    
+
     let user = null;
 
     if (token) {
@@ -27,7 +27,7 @@ export async function handle({ event, resolve }) {
 export const handleFetch: HandleFetch = async ({ request, fetch, event }) => {
 	const refreshToken = event.cookies.get('refresh_token');
 	const accessToken = event.cookies.get('access_token');
-	
+
 	if (request.url.includes("refresh-token") && refreshToken) {
 		request.headers.set('Authorization', `Bearer ${refreshToken}`);
 	} else if (request.url.startsWith(PUBLIC_REST_API_URL) && accessToken) {
