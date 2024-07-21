@@ -30,8 +30,6 @@ export const apiFetch = async (fetch: typeof window.fetch, cookies: any, url: st
             throw error(refreshResponse.status, refreshData.error);
         }
 
-        console.log("refresthdata", refreshData);
-
         cookies.set('access_token', refreshData.accessToken, {
             path: '/',
             sameSite: 'lax',
