@@ -26,9 +26,17 @@ public class TodoController : ControllerBase
     public ActionResult<Todo> Get(int id)
     {
         Todo? todo = _context.Todos.Find(id);
+        var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
 
-        if(todo == null)
-            return NotFound();
+        if (todo == null)
+        {
+            return NotFound(new {error = "No todo found."});
+        }
+        
+        else if (todo.UserId != userId)
+        {
+            return Unauthorized(new {error = "Not authorized to access this todo."});
+        }
 
         return todo;
     }
@@ -47,7 +55,7 @@ public class TodoController : ControllerBase
             }
             else
             {
-                return BadRequest("Invalid date filter. Please provide a valid date.");
+                return BadRequest(new {error = "Invalid date filter. Please provide a valid date."});
             }
         }
 
@@ -82,6 +90,7 @@ public class TodoController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Todo todo)  // TODO use DTO so that user-id can't be changed, or set it with id from jwt.
     {
+        var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
         if (id != todo.Id)
         {
             return BadRequest(new { error = "Id does not match" });
@@ -93,6 +102,10 @@ public class TodoController : ControllerBase
         else if (!_context.Todos.Any(t => t.Id == id))
         {
             return NotFound();
+        }
+        else if (todo.UserId != userId)  // TODO almost works, need a DTO for limiting user-id access
+        {
+            return Unauthorized(new {error = "Not authorized to access this todo."});
         }
 
         _context.Attach(todo).State = EntityState.Modified;
