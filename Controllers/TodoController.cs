@@ -30,12 +30,12 @@ public class TodoController : ControllerBase
 
         if (todo == null)
         {
-            return NotFound(new {error = "No todo found."});
+            return NotFound(new {error = new {detail = "No todo found." }});
         }
         
         else if (todo.UserId != userId)
         {
-            return Unauthorized(new {error = "Not authorized to access this todo."});
+            return Unauthorized(new {error = new {detail = "Not authorized to access this todo."}});
         }
 
         return todo;
@@ -55,7 +55,7 @@ public class TodoController : ControllerBase
             }
             else
             {
-                return BadRequest(new {error = "Invalid date filter. Please provide a valid date."});
+                return BadRequest(new {error = new {detail = "Invalid date filter. Please provide a valid date."}});
             }
         }
 
@@ -105,7 +105,7 @@ public class TodoController : ControllerBase
         }
         else if (todo.UserId != userId)  // TODO almost works, need a DTO for limiting user-id access
         {
-            return Unauthorized(new {error = "Not authorized to access this todo."});
+            return Unauthorized(new {error = new {detail = "Not authorized to access this todo."}});
         }
 
         _context.Attach(todo).State = EntityState.Modified;

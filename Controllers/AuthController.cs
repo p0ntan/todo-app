@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
 
         if (string.IsNullOrEmpty(bearerToken))
         {
-            return BadRequest("Missing access token.");
+            return BadRequest(new {error = new {detail = "Missing access token."}});
         }
 
         string googleAccessToken = bearerToken.ToString().Substring("Bearer ".Length).Trim();
@@ -67,7 +67,7 @@ public class AuthController : ControllerBase
 
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {error = new {detail = "User not found."}});
         }
 
         var tokens = AuthModel.RefreshAccessToken(_config, user);
