@@ -6,9 +6,8 @@
     export let data: PageData;
 
     function updateTodos(todo: any) {
-        console.log(todo);
-
         const todoIndex = data.todos.findIndex((t: any) => t.id === todo.id);
+
         data.todos[todoIndex] = todo;
     }
 
