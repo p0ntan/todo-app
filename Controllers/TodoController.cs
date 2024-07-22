@@ -88,12 +88,13 @@ public class TodoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Todo todo)  // TODO use DTO so that user-id can't be changed, or set it with id from jwt.
+    public async Task<IActionResult> Update(int id, Todo todo)
     {
         var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+
         if (id != todo.Id)
         {
-            return BadRequest(new { error = "Id does not match" });
+            return BadRequest(new { error = new {detail = "Id does not match" }});
         }
         else if (!ModelState.IsValid)
         {
@@ -101,12 +102,14 @@ public class TodoController : ControllerBase
         }
         else if (!_context.Todos.Any(t => t.Id == id))
         {
-            return NotFound();
+            return NotFound("No todo found.");
         }
-        else if (todo.UserId != userId)  // TODO almost works, need a DTO for limiting user-id access
+        else if (!_context.Todos.Any(t => t.Id == id && t.UserId == userId))
         {
             return Unauthorized(new {error = new {detail = "Not authorized to access this todo."}});
         }
+
+        todo.UserId = userId;  // Make sur user id is not changed to wrong one
 
         _context.Attach(todo).State = EntityState.Modified;
         await _context.SaveChangesAsync();
