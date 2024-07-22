@@ -11,16 +11,4 @@ export const load: PageServerLoad = async ({ fetch, cookies, locals }) => {
     if (!locals.user) {
         throw redirect(302, "/login");
     }
-
-    try {
-        const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/date/${date}`, {});
-        todos = await response.json()
-    } catch (err) {
-        console.log(err);
-        todos = [];
-    }
-
-    return {
-        todos
-    }
 }

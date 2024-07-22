@@ -2,17 +2,15 @@ import { json } from '@sveltejs/kit';
 import { apiFetch } from '$lib/server/apiFetch.js';
 import { PUBLIC_REST_API_URL } from '$env/static/public';
 
-export async function PUT({ fetch, cookies, request, params }) {
-    const data = await request.json();
-    const id = params.id;
+export async function GET({ fetch, cookies, request, params }) {
+    const date = params.date;
 
     try {
-        const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/${id}`,{
-            method: 'PUT',
+        const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/date/${date}`,{
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            }
         });
 
         const result = await response.json();
