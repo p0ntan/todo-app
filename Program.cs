@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TodoContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("TodoContext")));
 
+builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {
@@ -17,9 +18,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidIssuer = builder.Configuration["JWT:Issuer"],  // TODO fix the issuer and audience (and read up)
             ValidAudience = "TodoApi",
-            ValidateIssuer = false,
+            ValidateIssuer = true,
             ValidateAudience = false,  // TODO fix the issuer and audience (and read up)
-            ValidateLifetime = true,   // TODO read up! is lifetime the exp time?
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey
                 (Encoding.UTF8.GetBytes(builder.Configuration["JWT:AccessTokenSecret"]!)),
