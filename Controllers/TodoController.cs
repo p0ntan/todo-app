@@ -62,6 +62,24 @@ public class TodoController : ControllerBase
         return todos.ToList();
     }
 
+    [HttpGet("date/{dateFilter}")]
+    public ActionResult<IEnumerable<Todo>> GetFromDate(string dateFilter)
+    {
+        var userId = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+        var todos = _context.Todos.Where(todo => todo.UserId == userId);
+
+        if (DateTime.TryParse(dateFilter, out var date))
+        {
+            todos = todos.Where(todo => todo.Date.Date == date.Date);
+        }
+        else
+        {
+            return BadRequest(new {error = new {detail = "Invalid date filter. Please provide a valid date."}});
+        }
+
+        return todos.ToList();
+    }
+
     [HttpPost]
     public async Task<ActionResult<Todo>> Create(TodoCreateDto todoDto)
     {

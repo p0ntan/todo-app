@@ -68,7 +68,7 @@ public class AuthModel
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         IEnumerable<Claim> claims =
         [
-            new ("Name", user.FirstName + " " + user.LastName),
+            new ("Name", user.FirstName),
             new ("Email", user.Email),
             new ("UserId", user.Id.ToString()),
             new ("TokenType", "AccessToken"),
