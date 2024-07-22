@@ -10,12 +10,12 @@
 </script>
 
 <div class="h-screen flex flex-col">
-	<main class="p-6 flex-grow flex flex-col items-center justify-between">
+	<main class="p-6 flex-grow flex flex-col items-center justify-between overflow-auto">
 		<slot />
 	</main>
 
 	{#if user}
-		<footer class="fixed bottom-0 w-full variant-glass-primary"><Navigation /></footer>
+		<footer class="w-full variant-glass-primary"><Navigation /></footer>
 	{/if}
 </div>
 
