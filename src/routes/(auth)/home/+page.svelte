@@ -15,7 +15,7 @@
 </script>
 
 <div class="w-full">
-    <h1 class="h1 w-full mb-4">Hello {data?.user?.name}!</h1>
+    <h1 class="h1 w-full mb-4 mt-12">Hello {data?.user?.name}!</h1>
     
     <div class="card w-full bg-gradient-to-br from-primary-200 to-primary-600 py-6 px-4 shadow-xl mb-4">
         <h3 class="h3 p-0 mb-2">Today's progress</h3>
