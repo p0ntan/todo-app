@@ -12,19 +12,19 @@
 	];
 </script>
 
-<nav
-	class="w-full border-t border-surface-800 bg-white p-4"
->
+<nav class="w-full border-t border-surface-800 bg-white p-4">
 	<div class="flex bg-gray-200 rounded-full">
 		{#each paths as { name, path, icon }}
 			<button
-				class="btn grow text-lg {$page.url.pathname.includes(path) ? 'fill-black' : 'fill-surface-900'}"
-				aria-current='page'
+				class="btn grow text-lg {$page.url.pathname.includes(path)
+					? 'fill-black'
+					: 'fill-surface-900'}"
+				aria-current="page"
 				on:click={() => goto(path)}
 			>
-			<span class="flex flex-col items-center max-h-8 max-w-8 p-2 rounded-full">
-				<svelte:component this={icon} />
-			</span>
+				<span class="flex flex-col items-center max-h-8 max-w-8 p-2 rounded-full">
+					<svelte:component this={icon} />
+				</span>
 			</button>
 		{/each}
 	</div>

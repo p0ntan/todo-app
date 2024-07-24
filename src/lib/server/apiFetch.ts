@@ -14,29 +14,34 @@ import { setAccessCookie, setRefreshCookie } from '$lib/server/setCookies';
  * @return {Promise<Response>} A Promise that resolves to the Response object representing the response to the request.
  * @throws {Error} If the refresh token request fails.
  */
-export const apiFetch = async (fetch: typeof window.fetch, cookies: any, url: string, options = {}) => {
-    let response = await fetch(url, options);
+export const apiFetch = async (
+	fetch: typeof window.fetch,
+	cookies: any,
+	url: string,
+	options = {}
+) => {
+	let response = await fetch(url, options);
 
-    if (!response.ok) {
-        // Refresh access-token
-        const refreshResponse = await fetch(`${PUBLIC_REST_API_URL}/auth/refresh-token`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const refreshData = await refreshResponse.json();
+	if (!response.ok) {
+		// Refresh access-token
+		const refreshResponse = await fetch(`${PUBLIC_REST_API_URL}/auth/refresh-token`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const refreshData = await refreshResponse.json();
 
-        if (refreshResponse.status !== 200) {
-            throw error(refreshResponse.status, refreshData.error);
-        }
+		if (refreshResponse.status !== 200) {
+			throw error(refreshResponse.status, refreshData.error);
+		}
 
-        setAccessCookie(cookies, refreshData.accessToken);
-        setRefreshCookie(cookies, refreshData.refreshToken);
+		setAccessCookie(cookies, refreshData.accessToken);
+		setRefreshCookie(cookies, refreshData.refreshToken);
 
-        // Retry the initial request with the new token
-        response = await fetch(url, options);
-    }
+		// Retry the initial request with the new token
+		response = await fetch(url, options);
+	}
 
-    return response;
+	return response;
 };

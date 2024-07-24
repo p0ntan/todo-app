@@ -6,11 +6,11 @@
 
 	initializeStores();
 
-    $: user = $page.data.user;
+	$: user = $page.data.user;
 </script>
 
 <div class="h-screen flex flex-col">
-	<main class="p-6 overflow-y-auto  flex-grow flex flex-col items-center justify-between">
+	<main class="p-6 overflow-y-auto flex-grow flex flex-col items-center justify-between">
 		<slot />
 	</main>
 

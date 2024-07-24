@@ -3,27 +3,27 @@ import { apiFetch } from '$lib/server/apiFetch.js';
 import { PUBLIC_REST_API_URL } from '$env/static/public';
 
 export async function PUT({ fetch, cookies, request, params }) {
-    const data = await request.json();
-    const id = params.id;
+	const data = await request.json();
+	const id = params.id;
 
-    try {
-        const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/${id}`,{
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+	try {
+		const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		});
 
-        const result = await response.json();
+		const result = await response.json();
 
-        if (!response.ok) {
-            return json(result, { status: response.status });
-        }
+		if (!response.ok) {
+			return json(result, { status: response.status });
+		}
 
-        return json(result);
-    } catch (err) {
-        console.error(err);
-        return json({ error: "Unkown server error" }, { status: 500 });
-    }
+		return json(result);
+	} catch (err) {
+		console.error(err);
+		return json({ error: 'Unkown server error' }, { status: 500 });
+	}
 }

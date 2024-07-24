@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import Man from "$lib/icons/Man.svelte";
-	import Google from "$lib/icons/Google.svelte";
+	import Man from '$lib/icons/Man.svelte';
+	import Google from '$lib/icons/Google.svelte';
 
 	export let data: PageData;
 </script>
@@ -21,7 +21,11 @@
 	<div class="flex-grow h-1/2 border-b-1 border-primary-500 middle-line"></div>
 </div>
 
-<a type="button" href={data.googleUrl} class="btn btn-lg variant-filled-primary flex justify-between px-4 text-white">
+<a
+	type="button"
+	href={data.googleUrl}
+	class="btn btn-lg variant-filled-primary flex justify-between px-4 text-white"
+>
 	<span class="bg-white rounded-full p-1 mr-4 -my-2"><Google /></span>
 	<span>Sign in with Google</span>
 </a>
