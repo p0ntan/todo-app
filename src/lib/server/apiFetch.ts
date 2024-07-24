@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { PUBLIC_REST_API_URL } from '$env/static/public';
+import { setAccessCookie, setRefreshCookie } from '$lib/server/setCookies';
 
 /**
  * Fetches data from the specified URL using the provided fetch function, with optional request options.
@@ -30,21 +31,8 @@ export const apiFetch = async (fetch: typeof window.fetch, cookies: any, url: st
             throw error(refreshResponse.status, refreshData.error);
         }
 
-        cookies.set('access_token', refreshData.accessToken, {
-            path: '/',
-            sameSite: 'lax',
-            httpOnly: true,
-            secure: false, // TODO change this as well
-            maxAge: 60 * 5
-        });
-
-        cookies.set('refresh_token', refreshData.refreshToken, {
-            path: '/',
-            sameSite: 'lax',
-            httpOnly: true,
-            secure: false, // TODO change this as well
-            maxAge: 60 * 60 * 24 * 7
-        });
+        setAccessCookie(cookies, refreshData.accessToken);
+        setRefreshCookie(cookies, refreshData.refreshToken);
 
         // Retry the initial request with the new token
         response = await fetch(url, options);

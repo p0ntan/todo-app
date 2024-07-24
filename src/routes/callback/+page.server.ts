@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { redirect, error } from '@sveltejs/kit';
-import { PRIVATE_GOOGLE_CLIENT_ID, PRIVATE_GOOGLE_CLIENT_SECRET } from '$env/static/private';
+import { PRIVATE_GOOGLE_CLIENT_ID, PRIVATE_GOOGLE_CLIENT_SECRET, PRIVATE_CALLBACK_URL } from '$env/static/private';
 import { PUBLIC_REST_API_URL } from '$env/static/public';
 import { OAuth2Client } from 'google-auth-library';
-
+import { setAccessCookie, setRefreshCookie } from '$lib/server/setCookies';
 export const load: PageServerLoad = async ({ url, cookies, locals }) => {
 	if (locals.user)
 	{
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ url, cookies, locals }) => {
     const client = new OAuth2Client(
 		PRIVATE_GOOGLE_CLIENT_ID,
 		PRIVATE_GOOGLE_CLIENT_SECRET,
-		"http://localhost:5173/callback"
+		PRIVATE_CALLBACK_URL
 	);
 
     if (typeof authCode !== 'string' || !authCode) {
@@ -54,21 +54,8 @@ export const load: PageServerLoad = async ({ url, cookies, locals }) => {
 		throw redirect(304, '/');
     }
 
-    cookies.set('access_token', parsedResponse.accessToken, {
-		path: '/',
-		sameSite: 'lax',
-        httpOnly: true,
-		secure: false, // TODO change this aswell
-		maxAge: 60 * 15
-	});
-
-    cookies.set('refresh_token', parsedResponse.refreshToken, {
-		path: '/',
-		sameSite: 'lax',
-        httpOnly: true,
-		secure: false, // TODO change this aswell
-		maxAge: 60 * 60 * 24 * 7
-	});
+	setAccessCookie(cookies, parsedResponse.accessToken);
+	setRefreshCookie(cookies, parsedResponse.refreshToken);
 
     throw redirect(302, "/home");
 }
