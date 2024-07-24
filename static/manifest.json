@@ -1,0 +1,28 @@
+{
+	"name": "TodoApp",
+	"short_name": "TodoApp",
+	"description": "...",
+	"id": "/",
+	"orientation": "portrait",
+	"start_url": "/",
+	"theme_color": "#15171f",
+	"background_color": "#15171f",
+	"display": "standalone",
+	"icons": [
+		{
+			"src": "man.svg",
+			"sizes": "72x72",
+			"type": "image/png"
+		},
+		{
+			"src": "man.svg",
+			"sizes": "128x128",
+			"type": "image/png"
+		},
+		{
+			"src": "man.svg",
+			"sizes": "144x144",
+			"type": "image/png"
+		}
+	]
+}
