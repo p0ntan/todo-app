@@ -47,6 +47,7 @@
         const modal: ModalSettings = {
             type: 'component',
             component: modalComponent,
+            backdropClasses: '!bg-primary-400 !bg-opacity-80',
             response: (response: Todo | false) => {
                 if (response) {
                     dispatch('update', todo)
