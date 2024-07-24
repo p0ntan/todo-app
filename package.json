@@ -10,13 +10,16 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy": "npm run build && rsync -av --delete ./build zaoua#lenticode.com@lenticode.com:/var/www/todo-app.lenticode.com/",
+    "pure-deploy": "rsync -av --delete ./build zaoua#lenticode.com@lenticode.com:/var/www/todo-app.lenticode.com/"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
     "@skeletonlabs/skeleton": "2.10.2",
     "@skeletonlabs/tw-plugin": "0.4.0",
     "@sveltejs/adapter-auto": "^3.0.0",
+    "@sveltejs/adapter-node": "^4.0.1",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@tailwindcss/forms": "0.5.7",
@@ -39,7 +42,7 @@
     "tailwindcss": "3.4.6",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
-    "vite": "^5.0.3",
+    "vite": "^5.0.11",
     "vite-plugin-tailwind-purgecss": "0.3.3"
   },
   "type": "module",
