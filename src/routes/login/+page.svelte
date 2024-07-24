@@ -11,7 +11,7 @@
 	<p class="text-center">All you need to get started is to create your account.</p>
 </div>
 
-<div class="flex-grow flex flex-col justify-center">
+<div class="flex-grow h-full w-full py-4 flex flex-col items-center overflow-x-hidden">
 	<Man />
 </div>
 

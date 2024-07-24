@@ -10,7 +10,7 @@
 </script>
 
 <div class="h-screen flex flex-col">
-	<main class="p-6 flex-grow flex flex-col items-center justify-between overflow-auto">
+	<main class="p-6 overflow-y-auto  flex-grow flex flex-col items-center justify-between">
 		<slot />
 	</main>
 

@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { PRIVATE_GOOGLE_CLIENT_ID, PRIVATE_GOOGLE_CLIENT_SECRET } from '$env/static/private';
+import { PRIVATE_GOOGLE_CLIENT_ID, PRIVATE_GOOGLE_CLIENT_SECRET, PRIVATE_CALLBACK_URL } from '$env/static/private';
 import { OAuth2Client } from 'google-auth-library';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const client = new OAuth2Client(
 		PRIVATE_GOOGLE_CLIENT_ID,
 		PRIVATE_GOOGLE_CLIENT_SECRET,
-		"http://localhost:5173/callback"
+		PRIVATE_CALLBACK_URL
 	);
 
 	const scopes = [
