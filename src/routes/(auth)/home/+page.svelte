@@ -6,6 +6,8 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import TodoCreate from '$lib/components/TodoCreate.svelte';
 	import Todos from '$lib/components/Todos.svelte';
+	import Heading from '$lib/components/Heading.svelte';
+	
 
 	const modalStore = getModalStore();
 
@@ -32,7 +34,7 @@
 </script>
 
 <div class="w-full">
-	<h1 class="h1 w-full mb-4 mt-12">Hello {$page.data.user.name}!</h1>
+	<Heading content="Hello {$page.data.user.name}!" />
 
 	<div
 		class="card w-full bg-gradient-to-br from-primary-200 to-primary-600 py-6 px-4 shadow-xl mb-4"

@@ -8,6 +8,7 @@
 	import TodoCreate from '$lib/components/TodoCreate.svelte';
 	import dayjs from 'dayjs';
 	import Todos from '$lib/components/Todos.svelte';
+	import Heading from '$lib/components/Heading.svelte';
 
 	const modalStore = getModalStore();
 	let store: any;
@@ -93,7 +94,7 @@
 </script>
 
 <div class="w-full">
-	<h1 class="h1 w-full mb-4 mt-12">Calendar</h1>
+	<Heading content="Calendar" />
 
 	<div class="flex justify-center mb-8">
 		<div class="rounded-xl overflow-hidden shadow-lg border-2 border-primary-500">

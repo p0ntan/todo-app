@@ -124,10 +124,10 @@
 				<h2 class="h2 font-light">{todo.title}</h2>
 				<p>{todo.description}</p>
 				<footer class="modal-footer {parent.regionFooter}">
-					<button class="btn bg-gradient-to-br from-success-50 to-success-300" on:click={() => edit = true}
+					<button class="btn bg-gradient-to-br from-warning-300 to-warning-500" on:click={() => edit = true}
 						>Edit</button
 					>
-					<button class="btn bg-gradient-to-br from-error-50 to-error-200" on:click={deleteTodo}
+					<button class="btn bg-gradient-to-br from-error-100 to-error-300" on:click={deleteTodo}
 						>Delete todo</button
 					>
 				</footer>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import Heading from '$lib/components/Heading.svelte';
 
 	const user = $page.data.user;
 
@@ -27,7 +28,7 @@
 
 <div class="w-full h-full flex flex-col justify-between">
 	<div>
-		<h1 class="h1 w-full mb-4 mt-12">Settings</h1>
+		<Heading content="Settings" />
 
 		<div>
 			<label class="label">
