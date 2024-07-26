@@ -127,7 +127,7 @@
 					<button class="btn bg-gradient-to-br from-warning-300 to-warning-500" on:click={() => edit = true}
 						>Edit</button
 					>
-					<button class="btn bg-gradient-to-br from-error-100 to-error-300" on:click={deleteTodo}
+					<button class="btn bg-gradient-to-br from-error-300 to-error-500 text-white" on:click={deleteTodo}
 						>Delete todo</button
 					>
 				</footer>
