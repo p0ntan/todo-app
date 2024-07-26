@@ -62,6 +62,7 @@
 
 			if (response.ok) {
 				todos = result;
+
 				return result;
 			} else {
 				throw new Error('Failed to get todos.');

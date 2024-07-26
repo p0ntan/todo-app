@@ -3,6 +3,7 @@
 	import type { SvelteComponent } from 'svelte';
 	import type { Todo } from '$lib/types';
 	import { onMount } from 'svelte';
+	import SuccessMarker from './Spinner.svelte';
 
 	// Stores
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -15,6 +16,9 @@
 
 	export let todo: Todo;
 
+	let isLoading: boolean = false;
+	let isDone: boolean = false;
+
 	onMount(() => {
 		todo.date = todo.date.slice(0, 10);
 	});
@@ -22,6 +26,8 @@
 	// We've created a custom submit function to pass the response and close the modal.
 	async function onFormSubmit() {
 		try {
+			isLoading = true;
+
 			const response = await fetch(`${$page.url.origin}/api-proxy/todos/${todo.id}`, {
 				method: 'PUT',
 				headers: {
@@ -34,16 +40,20 @@
 
 			if (response.ok) {
 				todo = result;
+
+				isDone = true;
+
+				setTimeout(() => {
+					if ($modalStore[0].response) $modalStore[0].response(todo);
+
+					modalStore.close();
+				}, 750);
 			} else {
 				throw new Error('Failed to update todo.');
 			}
 		} catch (error) {
 			console.error('Error:', error);
 		}
-
-		if ($modalStore[0].response) $modalStore[0].response(todo);
-
-		modalStore.close();
 	}
 </script>
 
@@ -51,6 +61,9 @@
 
 {#if $modalStore[0]}
 	<div class="card p-4 w-modal shadow-xl space-y-4">
+		{#if isLoading}
+			<SuccessMarker isChecked={isDone}/>
+		{:else}
 		<form class="form space-y-2">
 			<input
 				class="input h2 rounded-md border border-primary-50"
@@ -75,5 +88,6 @@
 				>Update todo</button
 			>
 		</footer>
+		{/if}
 	</div>
 {/if}

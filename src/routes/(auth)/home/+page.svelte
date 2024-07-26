@@ -57,10 +57,6 @@
 		<p class="text-white text-end">{doneTodos.length}/{todos.length} done</p>
 	</div>
 
-	<!-- <p class="mb-8">
-        A motivation quote could be prestened here, why shoudn’t it?
-    </p> -->
-
 	<button
 		class="btn bg-gradient-to-br from-primary-400 to-primary-600 text-white mx-auto block mb-6"
 		on:click={openCreateModal}>Add todo</button
