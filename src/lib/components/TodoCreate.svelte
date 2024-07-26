@@ -17,7 +17,7 @@
 		id: 0, // Wont matter, new one is set on server
 		title: '',
 		description: '',
-		date: new Date().toISOString().slice(0, 10),
+		date: $modalStore[0].meta?.date || new Date().toISOString().slice(0, 10),
 		finished: false,
 		userId: 0 // Wont matter, user id is taken from jwt
 	};

@@ -6,10 +6,10 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import TodoDetails from './TodoDetails.svelte';
 
+	export let todo: Todo;
+
 	const modalStore = getModalStore();
 	const dispatch = createEventDispatcher();
-
-	export let todo: Todo;
 
 	async function updateTodoFinished() {
 		todo.finished = !todo.finished;
@@ -48,9 +48,13 @@
 			type: 'component',
 			component: modalComponent,
 			backdropClasses: '!bg-primary-400 !bg-opacity-80',
-			response: (response: Todo | false) => {
+			response: (response: Todo | false | { message: string }) => {
 				if (response) {
-					dispatch('update', todo);
+					if ('message' in response && response.message.includes("deleted")) {
+						dispatch('delete', todo);
+					} else {
+						dispatch('update', todo);
+					}
 				}
 			}
 		};

@@ -27,3 +27,27 @@ export async function PUT({ fetch, cookies, request, params }) {
 		return json({ error: 'Unkown server error' }, { status: 500 });
 	}
 }
+
+export async function DELETE({ fetch, cookies, request, params }) {
+	const id = params.id;
+
+	try {
+		const response = await apiFetch(fetch, cookies, `${PUBLIC_REST_API_URL}/todos/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const result = await response.json();
+
+		if (!response.ok) {
+			return json(result, { status: response.status });
+		}
+
+		return json(result);
+	} catch (err) {
+		console.error(err);
+		return json({ error: 'Unkown server error' }, { status: 500 });
+	}
+}

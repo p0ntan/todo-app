@@ -18,12 +18,43 @@
 
 	let isLoading: boolean = false;
 	let isDone: boolean = false;
+	let edit: boolean = false;
 
 	onMount(() => {
 		todo.date = todo.date.slice(0, 10);
 	});
 
-	// We've created a custom submit function to pass the response and close the modal.
+	async function deleteTodo() {
+		try {
+			isLoading = true;
+
+			const response = await fetch(`${$page.url.origin}/api-proxy/todos/${todo.id}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(todo)
+			});
+
+			const result = await response.json();
+
+			if (response.ok) {
+
+				isDone = true;
+
+				setTimeout(() => {
+					if ($modalStore[0].response) $modalStore[0].response(result);
+
+					modalStore.close();
+				}, 750);
+			} else {
+				throw new Error('Failed to delete todo.');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
+
 	async function onFormSubmit() {
 		try {
 			isLoading = true;
@@ -64,30 +95,43 @@
 		{#if isLoading}
 			<SuccessMarker isChecked={isDone}/>
 		{:else}
-		<form class="form space-y-2">
-			<input
-				class="input h2 rounded-md border border-primary-50"
-				type="text"
-				bind:value={todo.title}
-				placeholder="Enter title..."
-			/>
-			<textarea
-				class="textarea border border-primary-50"
-				rows="3"
-				bind:value={todo.description}
-				placeholder="Enter description."
-			/>
-			<input class="input rounded-md border border-primary-50" type="date" bind:value={todo.date} />
-		</form>
+			{#if edit}
+				<form class="form space-y-2">
+					<input
+						class="input h2 rounded-md border border-primary-50"
+						type="text"
+						bind:value={todo.title}
+						placeholder="Enter title..."
+					/>
+					<textarea
+						class="textarea border border-primary-50"
+						rows="3"
+						bind:value={todo.description}
+						placeholder="Enter description."
+					/>
+					<input class="input rounded-md border border-primary-50" type="date" bind:value={todo.date} />
+				</form>
 
-		<footer class="modal-footer {parent.regionFooter}">
-			<button class="btn bg-gradient-to-br from-error-50 to-error-200" on:click={parent.onClose}
-				>{parent.buttonTextCancel}</button
-			>
-			<button class="btn bg-gradient-to-br from-success-50 to-success-300" on:click={onFormSubmit}
-				>Update todo</button
-			>
-		</footer>
+				<footer class="modal-footer {parent.regionFooter}">
+					<button class="btn bg-gradient-to-br from-error-50 to-error-200" on:click={parent.onClose}
+						>{parent.buttonTextCancel}</button
+					>
+					<button class="btn bg-gradient-to-br from-success-50 to-success-300" on:click={onFormSubmit}
+						>Update todo</button
+					>
+				</footer>
+			{:else}
+				<h2 class="h2 font-light">{todo.title}</h2>
+				<p>{todo.description}</p>
+				<footer class="modal-footer {parent.regionFooter}">
+					<button class="btn bg-gradient-to-br from-success-50 to-success-300" on:click={() => edit = true}
+						>Edit</button
+					>
+					<button class="btn bg-gradient-to-br from-error-50 to-error-200" on:click={deleteTodo}
+						>Delete todo</button
+					>
+				</footer>
+			{/if}
 		{/if}
 	</div>
 {/if}

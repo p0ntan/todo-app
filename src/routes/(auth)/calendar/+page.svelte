@@ -1,23 +1,21 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { InlineCalendar } from 'svelte-calendar';
-	import { onMount } from 'svelte';
-	import dayjs from 'dayjs';
+	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import type { Todo } from '$lib/types';
-	import TodoComponent from '$lib/components/Todo.svelte';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { InlineCalendar } from 'svelte-calendar';
+	import TodoCreate from '$lib/components/TodoCreate.svelte';
+	import dayjs from 'dayjs';
+	import Todos from '$lib/components/Todos.svelte';
 
+	const modalStore = getModalStore();
 	let store: any;
 	let todos: Todo[] = [];
 
 	onMount(async () => {
 		todos = await getTodos();
 	});
-
-	function updateTodos(todo: any) {
-		const todoIndex = todos.findIndex((t: any) => t.id === todo.id);
-
-		todos[todoIndex] = todo;
-	}
 
 	const theme = {
 		calendar: {
@@ -48,6 +46,24 @@
 			}
 		}
 	};
+
+	function openCreateModal() {
+		const modalComponent: ModalComponent = {
+			ref: TodoCreate
+		};
+		const modal: ModalSettings = {
+			type: 'component',
+			component: modalComponent,
+			backdropClasses: '!bg-primary-400 !bg-opacity-80',
+			meta: {date: selectedDate}, 
+			response: (response: Todo | false) => {
+				if (response) {
+					todos = [...todos, response];
+				}
+			}
+		};
+		modalStore.trigger(modal);
+	}
 
 	async function getTodos() {
 		try {
@@ -85,9 +101,10 @@
 		</div>
 	</div>
 
-	<ul class="list w-full px-2">
-		{#each todos as todo}
-			<TodoComponent {todo} on:update={(e) => updateTodos(e.detail)} />
-		{/each}
-	</ul>
+	<button
+		class="btn bg-gradient-to-br from-primary-400 to-primary-600 text-white mx-auto block mb-6"
+		on:click={openCreateModal}>Add todo</button
+	>
+
+	<Todos {todos} date={selectedDate} />
 </div>

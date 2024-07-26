@@ -1,21 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { ProgressBar } from '@skeletonlabs/skeleton';
-	import TodoComponent from '$lib/components/Todo.svelte';
 	import type { Todo } from '$lib/types';
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import TodoCreate from '$lib/components/TodoCreate.svelte';
+	import Todos from '$lib/components/Todos.svelte';
 
 	const modalStore = getModalStore();
 
 	let todos: Todo[] = $page.data.todos;
-
-	function updateTodos(todo: Todo) {
-		const todoIndex = todos.findIndex((t: any) => t.id === todo.id);
-
-		todos[todoIndex] = todo;
-	}
 
 	function openCreateModal() {
 		const modalComponent: ModalComponent = {
@@ -27,8 +21,6 @@
 			backdropClasses: '!bg-primary-400 !bg-opacity-80',
 			response: (response: Todo | false) => {
 				if (response) {
-					console.log('res', response);
-
 					todos = [...todos, response];
 				}
 			}
@@ -36,7 +28,7 @@
 		modalStore.trigger(modal);
 	}
 
-	$: doneTodos = todos.filter((todo: any) => todo.finished);
+	$: doneTodos = todos.filter((todo: Todo) => todo.finished);
 </script>
 
 <div class="w-full">
@@ -62,9 +54,5 @@
 		on:click={openCreateModal}>Add todo</button
 	>
 
-	<ul class="list w-full px-2">
-		{#each todos as todo}
-			<TodoComponent {todo} on:update={(e) => updateTodos(e.detail)} />
-		{/each}
-	</ul>
+	<Todos {todos} on:update={(e) => todos = e.detail} />
 </div>
