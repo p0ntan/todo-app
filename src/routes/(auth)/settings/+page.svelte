@@ -6,6 +6,7 @@
 	const user = $page.data.user;
 
 	let firstName = user?.name;
+	let email = user?.email;
 
 	async function updateUser() {
 		try {
@@ -31,10 +32,16 @@
 		<Heading content="Settings" />
 
 		<div>
-			<label class="label">
+			<label class="label mb-2">
 				<span>Name:</span>
 				<input type="text" name="firstname" class="input rounded-md" bind:value={firstName} />
 			</label>
+
+			<label class="label mb-4">
+				<span>Email:</span>
+				<input type="text" name="firstname" class="input rounded-md" value={email} disabled />
+			</label>
+
 
 			<button
 				class="btn bg-gradient-to-br from-success-200 to-success-300 mx-auto block mb-6"
