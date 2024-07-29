@@ -11,18 +11,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	logout({ cookies }) {
 		cookies.delete('access_token', {
-			// FIXME remember to remove this when deploying
 			path: '/',
 			sameSite: 'lax',
 			httpOnly: true,
-			secure: false // TODO change this aswell
+			secure: true
 		});
 		cookies.delete('refresh_token', {
-			// FIXME remember to remove this when deploying
 			path: '/',
 			sameSite: 'lax',
 			httpOnly: true,
-			secure: false // TODO change this aswell
+			secure: true
 		});
 
 		redirect(303, '/login');

@@ -5,7 +5,7 @@ export function setAccessCookie(cookies: Cookies, accessToken: string) {
 		path: '/',
 		sameSite: 'lax',
 		httpOnly: true,
-		secure: false, // TODO change this as well
+		secure: true,
 		maxAge: 60 * 15
 	});
 }
@@ -15,7 +15,7 @@ export function setRefreshCookie(cookies: Cookies, refreshToken: string) {
 		path: '/',
 		sameSite: 'lax',
 		httpOnly: true,
-		secure: false, // TODO change this as well
+		secure: true,
 		maxAge: 60 * 60 * 24 * 7
 	});
 }
