@@ -16,10 +16,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         x.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidIssuer = builder.Configuration["JWT:Issuer"],  // TODO fix the issuer and audience (and read up)
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = "TodoApi",
             ValidateIssuer = true,
-            ValidateAudience = false,  // TODO fix the issuer and audience (and read up)
+            ValidateAudience = false,  // TODO fix the audience (and read up)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey
@@ -68,7 +68,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
